@@ -2,13 +2,14 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import authMiddleware from "../../../utils/authMiddleware";
+import convertTZ from "../../../utils/formatDate";
 import prisma from "../prisma";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { user } = req as any; // We use "as any" because the custom property is not in the type definition
 
   if (!user.email) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(200).json({ message: "Unauthorized", status: 401 });
   }
 
   try {
@@ -21,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    const currentDate = new Date();
+    const currentDate = convertTZ(new Date(), "Asia/Jakarta");
     const startOfDay = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),

@@ -16,7 +16,7 @@ export default async function handler(
 
   if (!email || !password) {
     return res
-      .status(400)
+      .status(200)
       .json({ message: "Email and password are required", status: 400 });
   }
 

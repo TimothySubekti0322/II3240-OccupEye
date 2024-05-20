@@ -2,6 +2,7 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import authMiddleware from "../../../../utils/authMiddleware";
+import convertTZ from "../../../../utils/formatDate";
 import prisma from "../../prisma";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,19 +29,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (!device) {
-      return res.status(404).json({ message: "Device not found" });
+      return res.status(200).json({ message: "Device not found", status: 404 });
     }
 
-    const currentDate = new Date();
+    const currentDate = convertTZ(new Date(), "Asia/Jakarta");
     const startOfDay = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
       currentDate.getDate()
     );
     const currentHour = currentDate.getHours();
-    const earliestDate = device.data.length
-      ? device.data[0].date
-      : new Date().toISOString();
 
     const currentVisitors = device.data.reduce((sum, entry) => {
       if (entry.date <= currentDate) {
@@ -78,6 +76,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       orderBy: [{ date: "asc" }, { hour: "asc" }],
     });
+
+    if (enteredByHourData.length === 0) {
+      return res.status(200).json({
+        message: "No Data Found",
+        data: [],
+        status: 404,
+      });
+    }
 
     const enteredByDayData = await prisma.data.groupBy({
       by: ["date"],
@@ -167,8 +173,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       message: "success",
       data: {
         currentVisitors,
-        enteredToday: enteredToday._sum.entered || 0,
-        enteredThisHour: enteredThisHour._sum.entered || 0,
+        enteredToday: enteredToday._sum.entered ?? 0,
+        enteredThisHour: enteredThisHour._sum.entered ?? 0,
         enteredByHour: enteredByHourFormatted,
         enteredByDay: enteredByDayFormatted,
       },
@@ -179,13 +185,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
-function isSameDay(date1: Date, date2: Date): boolean {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  );
-}
 
 export default authMiddleware(handler);
