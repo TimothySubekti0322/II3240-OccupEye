@@ -4,6 +4,9 @@ import { Image, Text, View, TouchableOpacity, TextInput } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import IMAGE from "../../static/image";
 import { useState } from "react";
+import axios from "axios";
+import API from "../../static/API";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialFormState = {
   email: "",
@@ -20,8 +23,19 @@ const Login = () => {
     }));
   };
 
-  const loginHandler = () => {
-    router.replace("../listDashboard");
+  const loginHandler = async () => {
+    console.log(formState);
+    try {
+      const response = await axios.post(`${API}/api/login`, formState);
+      console.log(response.data.payload);
+      if (response.data.status == 200) {
+        await AsyncStorage.setItem("token", response.data.token);
+        await AsyncStorage.setItem("name", response.data.payload.name);
+        router.push("../listDashboard");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

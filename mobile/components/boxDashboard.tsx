@@ -8,6 +8,7 @@ import { router } from "expo-router";
 export type ChartData = { value: number; label: string }[];
 
 interface BoxDashboardProps {
+  id: string;
   title: string;
   currentVisitor: number;
   dailyTotal: number;
@@ -16,6 +17,7 @@ interface BoxDashboardProps {
 }
 
 const BoxDashboard: React.FC<BoxDashboardProps> = ({
+  id,
   title,
   currentVisitor,
   dailyTotal,
@@ -23,7 +25,7 @@ const BoxDashboard: React.FC<BoxDashboardProps> = ({
   chartData,
 }) => {
   const goToDashboardHandler = () => {
-    router.push("../dashboard/dummyTest");
+    router.push(`../dashboard/${id}`);
   };
   return (
     <View className="w-full border-white border-[2px] rounded-xl pt-4 px-4 pb-8 mb-8">

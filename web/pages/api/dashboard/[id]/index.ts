@@ -28,6 +28,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
+    console.log(device);
+
     if (!device) {
       return res.status(200).json({ message: "Device not found", status: 404 });
     }
@@ -172,6 +174,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({
       message: "success",
       data: {
+        deviceId: device.id,
+        deviceName: device.name,
+        owner: device.email,
         currentVisitors,
         enteredToday: enteredToday._sum.entered ?? 0,
         enteredThisHour: enteredThisHour._sum.entered ?? 0,
