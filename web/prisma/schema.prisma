@@ -37,4 +37,6 @@ model Data {
   visitors    Int
   entered     Int
   exited      Int
+
+  @@unique([deviceId, date, hour])
 }
