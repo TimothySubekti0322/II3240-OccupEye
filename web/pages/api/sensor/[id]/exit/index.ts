@@ -1,6 +1,7 @@
 // pages/api/sensor/[id]/exit
 
 import type { NextApiRequest, NextApiResponse } from "next";
+import convertTZ from "../../../../../utils/formatDate";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -20,9 +21,12 @@ export default async function handler(
   }
 
   try {
-    const currentDate = new Date();
+    const currentDate = convertTZ(new Date(), "Asia/Jakarta");
+    console.log(currentDate);
     const hour = currentDate.getHours();
+    console.log(hour);
     currentDate.setHours(10, 0, 0, 0);
+    console.log(currentDate);
 
     // Check if the data entry exists
     const existingEntry = await prisma.data.findFirst({

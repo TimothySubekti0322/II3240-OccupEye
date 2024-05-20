@@ -1,6 +1,7 @@
 // pages/api/sensor/[id]/enter.ts
 
 import type { NextApiRequest, NextApiResponse } from "next";
+import convertTZ from "../../../../../utils/formatDate";
 import prisma from "../../../prisma";
 
 export default async function handler(
@@ -20,11 +21,9 @@ export default async function handler(
   try {
     const currentDate = convertTZ(new Date(), "Asia/Jakarta");
     console.log(currentDate);
-    currentDate.setHours(currentDate.getHours() + 7);
-    console.log(currentDate);
     const hour = currentDate.getHours();
     console.log(hour);
-    currentDate.setHours(10);
+    currentDate.setHours(10, 0, 0, 0);
     console.log(currentDate);
 
     // Check if the data entry exists
@@ -73,12 +72,4 @@ export default async function handler(
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
-}
-
-function convertTZ(date: Date, tzString: string) {
-  return new Date(
-    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
-      timeZone: tzString,
-    })
-  );
 }
