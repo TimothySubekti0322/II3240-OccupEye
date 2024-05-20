@@ -18,9 +18,14 @@ export default async function handler(
   }
 
   try {
-    const currentDate = new Date();
+    const currentDate = convertTZ(new Date(), "Asia/Jakarta");
+    console.log(currentDate);
+    currentDate.setHours(currentDate.getHours() + 7);
+    console.log(currentDate);
     const hour = currentDate.getHours();
-    currentDate.setHours(10, 0, 0, 0);
+    console.log(hour);
+    currentDate.setHours(10);
+    console.log(currentDate);
 
     // Check if the data entry exists
     const existingEntry = await prisma.data.findFirst({
@@ -47,9 +52,7 @@ export default async function handler(
           },
         },
       });
-    }
-
-    else {
+    } else {
       dataEntry = await prisma.data.create({
         data: {
           id: `data_${Date.now()}`,
@@ -70,4 +73,12 @@ export default async function handler(
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
+}
+
+function convertTZ(date: Date, tzString: string) {
+  return new Date(
+    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
+      timeZone: tzString,
+    })
+  );
 }

@@ -164,11 +164,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     return res.status(200).json({
-      currentVisitors,
-      enteredToday: enteredToday._sum.entered || 0,
-      enteredThisHour: enteredThisHour._sum.entered || 0,
-      enteredByHour: enteredByHourFormatted,
-      enteredByDay: enteredByDayFormatted,
+      message: "success",
+      data: {
+        currentVisitors,
+        enteredToday: enteredToday._sum.entered || 0,
+        enteredThisHour: enteredThisHour._sum.entered || 0,
+        enteredByHour: enteredByHourFormatted,
+        enteredByDay: enteredByDayFormatted,
+      },
+      status: 200,
     });
   } catch (error) {
     console.error(error);
