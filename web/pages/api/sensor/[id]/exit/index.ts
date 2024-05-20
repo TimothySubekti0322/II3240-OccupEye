@@ -24,32 +24,44 @@ export default async function handler(
     const hour = currentDate.getHours();
     currentDate.setHours(10, 0, 0, 0);
 
-    const dataEntry = await prisma.data.upsert({
+    // Check if the data entry exists
+    const existingEntry = await prisma.data.findFirst({
       where: {
-        deviceId_date_hour: {
-          deviceId: id,
-          date: currentDate,
-          hour: hour,
-        },
-      },
-      update: {
-        visitors: {
-          decrement: 1,
-        },
-        exited: {
-          increment: 1,
-        },
-      },
-      create: {
-        id: `data_${Date.now()}`, // Ensure you import and use a UUID library for this
         deviceId: id,
         date: currentDate,
         hour: hour,
-        visitors: 0,
-        entered: 0,
-        exited: 1,
       },
     });
+
+    let dataEntry;
+
+    if (existingEntry) {
+      dataEntry = await prisma.data.update({
+        where: {
+          id: existingEntry.id,
+        },
+        data: {
+          exited: {
+            increment: 1,
+          },
+          visitors: {
+            decrement: 1,
+          },
+        },
+      });
+    } else {
+      dataEntry = await prisma.data.create({
+        data: {
+          id: `data_${Date.now()}`,
+          deviceId: id,
+          date: currentDate,
+          hour: hour,
+          visitors: 0,
+          entered: 0,
+          exited: 1,
+        },
+      });
+    }
 
     return res.status(200).json(dataEntry);
   } catch (error) {

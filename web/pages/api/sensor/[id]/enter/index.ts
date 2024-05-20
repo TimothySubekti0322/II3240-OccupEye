@@ -22,34 +22,50 @@ export default async function handler(
     const hour = currentDate.getHours();
     currentDate.setHours(10, 0, 0, 0);
 
-    const dataEntry = await prisma.data.upsert({
+    // Check if the data entry exists
+    const existingEntry = await prisma.data.findFirst({
       where: {
-        deviceId_date_hour: {
-          deviceId: id,
-          date: currentDate,
-          hour: hour,
-        },
-      },
-      update: {
-        visitors: {
-          increment: 1,
-        },
-        entered: {
-          increment: 1,
-        },
-      },
-      create: {
-        id: `data_${Date.now()}`, // Ensure you import and use a UUID library for this
         deviceId: id,
         date: currentDate,
         hour: hour,
-        visitors: 1,
-        entered: 1,
-        exited: 0,
       },
     });
 
-    return res.status(200).json(dataEntry);
+    let dataEntry;
+
+    if (existingEntry) {
+      dataEntry = await prisma.data.update({
+        where: {
+          id: existingEntry.id,
+        },
+        data: {
+          entered: {
+            increment: 1,
+          },
+          visitors: {
+            increment: 1,
+          },
+        },
+      });
+    }
+
+    else {
+      dataEntry = await prisma.data.create({
+        data: {
+          id: `data_${Date.now()}`,
+          deviceId: id,
+          date: currentDate,
+          hour: hour,
+          visitors: 1,
+          entered: 1,
+          exited: 0,
+        },
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "success", data: dataEntry, status: 200 });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
