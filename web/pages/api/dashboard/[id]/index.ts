@@ -28,7 +28,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    console.log(device);
 
     if (!device) {
       return res.status(200).json({ message: "Device not found", status: 404 });
@@ -81,8 +80,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (enteredByHourData.length === 0) {
       return res.status(200).json({
-        message: "No Data Found",
-        data: [],
+        message: "success",
+        data: {
+          deviceId: device.id,
+          deviceName: device.name,
+          owner: device.email,
+          currentVisitors: 0,
+          enteredToday: 0,
+          enteredThisHour: 0,
+          enteredByHour: [],
+          enteredByDay: [],
+        },
         status: 404,
       });
     }

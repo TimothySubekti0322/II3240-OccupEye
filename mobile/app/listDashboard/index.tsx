@@ -106,7 +106,9 @@ const ListDashboard = () => {
       await AsyncStorage.removeItem("token");
       await AsyncStorage.removeItem("name");
       router.push("../login");
-    } catch (error) {}
+    } catch (error) {
+      Alert.alert("Error", error as string, [{ text: "OK" }]);
+    }
   };
 
   useEffect(() => {
@@ -189,7 +191,7 @@ const ListDashboard = () => {
               className="w-16"
               style={{ resizeMode: "contain" }}
             />
-            {/* <Icon source="account-circle" size={60} color="white" /> */}
+
             <View className="w-24 bg-[#93063E] rounded-xl overflow-hidden">
               <Pressable
                 className="items-center justify-center py-4"

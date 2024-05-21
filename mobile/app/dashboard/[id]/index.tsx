@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, Stack, router } from "expo-router";
@@ -102,6 +103,7 @@ const Dashboard = () => {
         console.log("currentDate = ", currentDate);
         const enteredByHour = response.data.data.enteredByHour;
 
+        console.log("enteredByHour : ", enteredByHour);
         // get all Data for current date
         let dataShownFiltered: Data[] = enteredByHour.filter(
           (data: Data) => data.date == currentDate
@@ -120,7 +122,7 @@ const Dashboard = () => {
         setOriginalShowedData(dataShown);
         setLoading(false);
       } catch (error) {
-        console.log(error);
+        console.log("Initialize Data Error : ", error);
       }
     };
 
@@ -303,6 +305,16 @@ const Dashboard = () => {
     }
   }, [selectedDate]);
 
+  const signOutHandler = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("name");
+      router.push("../login");
+    } catch (error) {
+      Alert.alert("Error", error as string, [{ text: "OK" }]);
+    }
+  };
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -319,7 +331,15 @@ const Dashboard = () => {
             className="w-16"
             style={{ resizeMode: "contain" }}
           />
-          <Icon source="account-circle" size={60} color="white" />
+          <View className="w-24 bg-[#93063E] rounded-xl overflow-hidden">
+            <Pressable
+              className="items-center justify-center py-4"
+              android_ripple={{ color: "#71031C" }}
+              onPress={() => signOutHandler()}
+            >
+              <Text className="text-white font-SyneBold ">Sign Out</Text>
+            </Pressable>
+          </View>
         </View>
         {loading ? (
           <View className="items-center justify-center flex-1">
