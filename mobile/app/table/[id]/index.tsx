@@ -2,16 +2,18 @@ import { View, Text, Pressable, Image } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../../components/header";
 import IMAGE from "../../../static/image";
 import DashboardTable from "../../../components/dashboardTable";
 
 const Table = () => {
+  const { id } = useLocalSearchParams();
   const backHandler = () => {
     router.back();
   };
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -47,7 +49,7 @@ const Table = () => {
             </View>
 
             {/* Table */}
-            <DashboardTable />
+            <DashboardTable id={id as string} />
           </View>
         </View>
       </SafeAreaView>

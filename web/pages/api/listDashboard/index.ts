@@ -2,7 +2,7 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import authMiddleware from "../../../utils/authMiddleware";
-import convertTZ from "../../../utils/formatDate";
+import convertTZ, { isDateLessThan } from "../../../utils/formatDate";
 import prisma from "../prisma";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -23,6 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     const currentDate = convertTZ(new Date(), "Asia/Jakarta");
+    console.log("currentDate = ", currentDate.getHours());
     const startOfDay = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -38,11 +39,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const devicesWithStats = await Promise.all(
       devices.map(async (device) => {
         const currentVisitors = device.data.reduce((sum, entry) => {
-          if (entry.date <= currentDate) {
+          if (isDateLessThan(entry.date, currentDate)) {
             return sum + entry.entered - entry.exited;
           }
           return sum;
         }, 0);
+
+        const testEnteredToday = await prisma.data.findMany({
+          where: {
+            deviceId: device.id,
+            date: {
+              gte: startOfDay,
+              lt: endOfDay,
+            },
+          },
+        });
 
         const enteredToday = await prisma.data.aggregate({
           _sum: {
@@ -85,13 +96,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const entry = currentDateData.find((e) => {
             return e.hour === hour;
           });
-
           return {
             value: entry ? entry.entered : 0,
             label: `${hour}:00`,
           };
         });
 
+    
         return {
           ...device,
           currentVisitors,

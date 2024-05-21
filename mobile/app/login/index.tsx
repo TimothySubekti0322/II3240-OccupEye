@@ -1,12 +1,20 @@
 import { Link, Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Image, Text, View, TouchableOpacity, TextInput } from "react-native";
+import {
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import IMAGE from "../../static/image";
 import { useState } from "react";
 import axios from "axios";
 import API from "../../static/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ActivityIndicator } from "react-native-paper";
 
 const initialFormState = {
   email: "",
@@ -15,6 +23,7 @@ const initialFormState = {
 
 const Login = () => {
   const [formState, setFormState] = useState(initialFormState);
+  const [loading, setLoading] = useState(false);
 
   const onChange = (key: string, value: string) => {
     setFormState((prevState) => ({
@@ -24,17 +33,19 @@ const Login = () => {
   };
 
   const loginHandler = async () => {
-    console.log(formState);
+    setLoading(true);
     try {
       const response = await axios.post(`${API}/api/login`, formState);
       console.log(response.data.payload);
       if (response.data.status == 200) {
         await AsyncStorage.setItem("token", response.data.token);
         await AsyncStorage.setItem("name", response.data.payload.name);
+        setLoading(false);
         router.push("../listDashboard");
       }
     } catch (error) {
       console.log(error);
+      Alert.alert("Error", error as string, [{ text: "OK" }]);
     }
   };
 
@@ -101,7 +112,11 @@ const Login = () => {
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
             >
-              <Text className="text-lg text-white font-SyneBold">Log in</Text>
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text className="text-lg text-white font-SyneBold">Log in</Text>
+              )}
             </LinearGradient>
           </TouchableOpacity>
 

@@ -3,14 +3,26 @@ import { StatusBar } from "expo-status-bar";
 import { Image, Text, View, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import IMAGE from "../static/image";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        router.push("/listDashboard");
+      }
+    };
+    checkToken();
+  });
+
   const loginHandler = () => {
     router.push("/login");
   };
 
   const signUpHandler = () => {
-    router.push("/signUp");
+    router.push("/signup");
   };
   return (
     <>

@@ -33,7 +33,7 @@ const getDevices = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const createDevice = async (req: NextApiRequest, res: NextApiResponse) => {
   const { user } = req as any; // Use "as any" because the custom property is not in the type definition
-  const { name } = req.body;
+  const { id, name } = req.body;
 
   if (!user.email) {
     return res.status(200).json({ message: "Unauthorized", status: 401 });
@@ -46,9 +46,21 @@ const createDevice = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
+    const idDeviceIsRegistered = await prisma.device.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (idDeviceIsRegistered) {
+      return res
+        .status(200)
+        .json({ message: "Device ID is already registered", status: 400 });
+    }
+
     const newDevice = await prisma.device.create({
       data: {
-        id: uuidv4(),
+        id: id,
         email: user.email,
         name,
       },
