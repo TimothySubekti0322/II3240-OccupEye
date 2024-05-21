@@ -59,7 +59,7 @@ const Dashboard = () => {
   const { id } = useLocalSearchParams();
 
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<string | null>("hourly");
   const [selectedDate, setSelectedDate] = useState<Date>(convertTZ());
 
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
@@ -93,17 +93,11 @@ const Dashboard = () => {
         });
         setDashboardData(response.data.data);
 
-        console.log(
-          "selectedDate = ",
-          selectedDate.toISOString().split("T")[0]
-        );
-
         // Set showed data
         const currentDate = selectedDate.toISOString().split("T")[0];
         console.log("currentDate = ", currentDate);
         const enteredByHour = response.data.data.enteredByHour;
 
-        console.log("enteredByHour : ", enteredByHour);
         // get all Data for current date
         let dataShownFiltered: Data[] = enteredByHour.filter(
           (data: Data) => data.date == currentDate
@@ -225,6 +219,8 @@ const Dashboard = () => {
   }, [selectedFilter]);
 
   useEffect(() => {
+    console.log("Selected Date = ", selectedDate);
+    console.log("Selected Filter = ", selectedFilter);
     if (selectedDate == null) return;
     const currentDate = selectedDate?.toISOString().split("T")[0];
 
@@ -234,6 +230,8 @@ const Dashboard = () => {
 
       // get all Data for current date
       if (enteredByHour == null) return;
+
+      console.log("currentDate = ", currentDate);
 
       let dataShownFiltered: Data[] = enteredByHour?.filter(
         (data: Data) => data.date == currentDate

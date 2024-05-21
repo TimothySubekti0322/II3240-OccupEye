@@ -19,6 +19,7 @@ import {
   PaperProvider,
   Portal,
   Modal,
+  Icon,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BoxDashboard from "../../components/boxDashboard";
@@ -137,6 +138,31 @@ const ListDashboard = () => {
     };
     fetchData();
   }, []);
+
+  const refreshData = async () => {
+    setLoading(true);
+    try {
+      // Fetch Name
+      const name = await AsyncStorage.getItem("name");
+      setName(name);
+
+      // Fetch Device
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.get(`${API}/api/listDashboard`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      setDevice(response.data.data);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", error as string, [{ text: "OK" }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -213,9 +239,20 @@ const ListDashboard = () => {
             </View>
           ) : (
             <ScrollView className="flex-1 px-6">
-              <Text className="mb-4 text-lg text-white font-SyneBold">
-                Welcome, {name}.
-              </Text>
+              <View className="flex-row items-center justify-between mb-4">
+                <Text className="text-lg text-white font-SyneBold">
+                  Welcome, {name}.
+                </Text>
+                <View className="overflow-hidden bg-[#3766AD] rounded-xl">
+                  <Pressable
+                    className="flex-row items-center justify-center px-4 py-2"
+                    android_ripple={{ color: "#15448B" }}
+                    onPress={() => refreshData()}
+                  >
+                    <Icon source="refresh" color="white" size={30} />
+                  </Pressable>
+                </View>
+              </View>
 
               {device?.map((item) => (
                 <BoxDashboard
