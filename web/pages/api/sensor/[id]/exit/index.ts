@@ -38,19 +38,21 @@ export default async function handler(
     let dataEntry;
 
     if (existingEntry) {
-      dataEntry = await prisma.data.update({
-        where: {
-          id: existingEntry.id,
-        },
-        data: {
-          exited: {
-            increment: 1,
+      if (existingEntry.visitors > 0) {
+        dataEntry = await prisma.data.update({
+          where: {
+            id: existingEntry.id,
           },
-          visitors: {
-            decrement: 1,
+          data: {
+            exited: {
+              increment: 1,
+            },
+            visitors: {
+              decrement: 1,
+            },
           },
-        },
-      });
+        });
+      }
     } else {
       const latestData = await prisma.data.findFirst({
         where: {
