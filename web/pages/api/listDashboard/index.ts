@@ -27,7 +27,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const startOfDay = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      currentDate.getDate()
+      currentDate.getDate(),
+      10,
+      0,
+      0
     );
     const endOfDay = new Date(
       currentDate.getFullYear(),
@@ -44,16 +47,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
           return sum;
         }, 0);
-
-        const testEnteredToday = await prisma.data.findMany({
-          where: {
-            deviceId: device.id,
-            date: {
-              gte: startOfDay,
-              lt: endOfDay,
-            },
-          },
-        });
 
         const enteredToday = await prisma.data.aggregate({
           _sum: {
@@ -102,7 +95,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           };
         });
 
-    
         return {
           ...device,
           currentVisitors,

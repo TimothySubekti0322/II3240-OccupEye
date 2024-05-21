@@ -28,7 +28,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-
     if (!device) {
       return res.status(200).json({ message: "Device not found", status: 404 });
     }
@@ -37,7 +36,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const startOfDay = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      currentDate.getDate()
+      currentDate.getDate(),
+      10,
+      0,
+      0
     );
     const currentHour = currentDate.getHours();
 
@@ -70,6 +72,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         hour: currentHour,
       },
     });
+
+    const testEnteredThisHour = await prisma.data.findMany({
+      where: {
+        deviceId: id,
+        date: startOfDay,
+        hour: currentHour,
+      },
+    });
+
+    console.log("deviceId = ", id);
+    console.log("startOfDay = ", startOfDay);
+    console.log("currentHour = ", currentHour);
+    console.log("testEnteredThisHour = ", testEnteredThisHour);
 
     const enteredByHourData = await prisma.data.findMany({
       where: {

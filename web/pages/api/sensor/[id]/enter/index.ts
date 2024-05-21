@@ -52,13 +52,22 @@ export default async function handler(
         },
       });
     } else {
+      const latestData = await prisma.data.findFirst({
+        where: {
+          deviceId: id,
+        },
+        orderBy: [{ date: "desc" }, { hour: "desc" }],
+        // Ensures only the latest entry is retrieved
+        take: 1,
+      });
+
       dataEntry = await prisma.data.create({
         data: {
           id: `data_${Date.now()}`,
           deviceId: id,
           date: currentDate,
           hour: hour,
-          visitors: 1,
+          visitors: latestData ? latestData.visitors + 1 : 1,
           entered: 1,
           exited: 0,
         },

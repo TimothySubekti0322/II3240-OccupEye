@@ -2,9 +2,7 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import convertTZ from "../../../../../utils/formatDate";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,13 +52,22 @@ export default async function handler(
         },
       });
     } else {
+      const latestData = await prisma.data.findFirst({
+        where: {
+          deviceId: id,
+        },
+        orderBy: [{ date: "desc" }, { hour: "desc" }],
+        // Ensures only the latest entry is retrieved
+        take: 1,
+      });
+
       dataEntry = await prisma.data.create({
         data: {
           id: `data_${Date.now()}`,
           deviceId: id,
           date: currentDate,
           hour: hour,
-          visitors: 0,
+          visitors: latestData ? latestData.visitors - 1 : 0,
           entered: 0,
           exited: 1,
         },
