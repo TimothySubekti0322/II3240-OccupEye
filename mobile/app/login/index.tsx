@@ -96,6 +96,7 @@ const Login = () => {
           >
             <TextInput
               className="w-full p-2 bg-white rounded-lg"
+              secureTextEntry={true}
               onChangeText={(text) => onChange("password", text)}
             />
           </LinearGradient>
