@@ -1,0 +1,51 @@
+// types.d.ts
+export interface RecordType {
+    "NIM": string;
+    "Nama": string;
+    "Kode MK 1": string;
+    "Nama MK 1": string;
+    "Nilai MK 1": string;
+    "SKS MK 1": number;
+    "Kode MK 2": string;
+    "Nama MK 2": string;
+    "Nilai MK 2": string;
+    "SKS MK 2": number;
+    "Kode MK 3": string;
+    "Nama MK 3": string;
+    "Nilai MK 3": string;
+    "SKS MK 3": number;
+    "Kode MK 4": string;
+    "Nama MK 4": string;
+    "Nilai MK 4": string;
+    "SKS MK 4": number;
+    "Kode MK 5": string;
+    "Nama MK 5": string;
+    "Nilai MK 5": string;
+    "SKS MK 5": number;
+    "Kode MK 6": string;
+    "Nama MK 6": string;
+    "Nilai MK 6": string;
+    "SKS MK 6": number;
+    "Kode MK 7": string;
+    "Nama MK 7": string;
+    "Nilai MK 7": string;
+    "SKS MK 7": number;
+    "Kode MK 8": string;
+    "Nama MK 8": string;
+    "Nilai MK 8": string;
+    "SKS MK 8": number;
+    "Kode MK 9": string;
+    "Nama MK 9": string;
+    "Nilai MK 9": string;
+    "SKS MK 9": number;
+    "Kode MK 10": string;
+    "Nama MK 10": string;
+    "Nilai MK 10": string;
+    "SKS MK 10": number;
+    "IPK": number;
+    "Public Key": string;
+    "Tanda Tangan Digital": string;
+    // "Unduh": string;
+    "Verifikasi": string;
+  }
+  

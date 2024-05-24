@@ -16,6 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/icon.png" />
+        <title>OccupEye</title>
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );

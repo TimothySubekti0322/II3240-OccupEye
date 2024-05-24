@@ -1,8 +1,8 @@
 // pages/api/dashboard/[id]
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import authMiddleware from "../../../../utils/authMiddleware";
-import convertTZ, { isDateLessThan } from "../../../../utils/formatDate";
+// import authMiddleware from "../../../../utils/authMiddleware";
+import {convertTZ} from "../../../../utils/formatDate";
 import prisma from "../../prisma";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -44,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const currentHour = currentDate.getHours();
 
     const currentVisitors = device.data.reduce((sum, entry) => {
-      if (isDateLessThan(entry.date, currentDate)) {
+      if ((entry.date < currentDate)) {
         return sum + entry.entered - entry.exited;
       }
       return sum;
@@ -213,5 +213,3 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
-export default authMiddleware(handler);

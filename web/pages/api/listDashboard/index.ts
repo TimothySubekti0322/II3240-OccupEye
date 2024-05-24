@@ -1,8 +1,8 @@
 // pages/api/getDevices.ts
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import authMiddleware from "../../../utils/authMiddleware";
-import convertTZ, { isDateLessThan } from "../../../utils/formatDate";
+// import authMiddleware from "../../../utils/authMiddleware";
+import {convertTZ } from "../../../utils/formatDate";
 import prisma from "../prisma";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const devicesWithStats = await Promise.all(
       devices.map(async (device) => {
         const currentVisitors = device.data.reduce((sum, entry) => {
-          if (isDateLessThan(entry.date, currentDate)) {
+          if ((entry.date < currentDate)) {
             return sum + entry.entered - entry.exited;
           }
           return sum;
@@ -114,4 +114,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default authMiddleware(handler);
+export default listDashboard;
