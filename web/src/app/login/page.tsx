@@ -3,7 +3,6 @@ import { ChangeEvent, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import Cookies from 'universal-cookie'
 
-
 import Navbar from "../components/Navbar";
 
 interface LoginData {
@@ -19,8 +18,8 @@ export default function Login() {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
-    const [emailError, setEmailError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     useLayoutEffect(() => {
         const cookies = new Cookies();
@@ -32,7 +31,6 @@ export default function Login() {
         }
     }, []);
 
-
     const handleLoginChange = (
         event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
@@ -40,39 +38,32 @@ export default function Login() {
         setLoginData({ ...loginData, [name]: value });
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
+        // e.preventDefault()
         setLoadingSubmit(true);
-        window.location.href = "/dashboard";
         try {
-            const res = await axios.post("/api/auth/", loginData);
+            console.log('trying');
+            const res = await axios.post(`/api/login/`, loginData);
             console.log(res.data);
             if (res.data.status === 200) {
                 console.log(res.data);
                 const cookies = new Cookies();
-                if (res.data.rememberMe) {
-                    cookies.set("token", res.data.token, {
-                        path: "/",
-                        expires: new Date(Date.now() + 12096e5),
-                    });
-                    cookies.set("payload", res.data.payload, {
-                        path: "/",
-                        expires: new Date(Date.now() + 12096e5),
-                    });
-                } else {
-                    cookies.set("token", res.data.token, { path: "/" });
-                    cookies.set("payload", res.data.payload, { path: "/" });
-                }
-                setEmailError(false);
-                setPasswordError(false);
-                    window.location.href = "/dashboard";
+            
+                cookies.set("token", res.data.token, { path: "/" });
+                cookies.set("payload", res.data.payload, { path: "/" });
+                window.location.href = "/dashboard";
+
+                setEmailError("");
+                setPasswordError("");
+                window.location.href = "/dashboard";
             } else if (res.data.status === 404) {
-                setEmailError(true);
+                setEmailError("Incorrect email address");
             } else if (res.data.status === 401) {
-                setPasswordError(true);
+                setPasswordError("Incorrect password");
             }
         } catch (err) {
             console.log(err);
+            setPasswordError("Something went wrong");
         } finally {
             setLoadingSubmit(false);
         }
@@ -97,8 +88,8 @@ export default function Login() {
                             </label>
                             <div className="w-full rounded-lg h-[40px] items-center flex justify-center bg-gradient-to-br from-pink1 to-purple1">
                                 <input
-                                    id="key"
-                                    name="key"
+                                    id="email"
+                                    name="email"
                                     className="rounded-lg  w-full h-[34px] m-0.5 text-black1 px-2 text-sm"
                                     onChange={handleLoginChange}
                                 ></input>
@@ -116,8 +107,9 @@ export default function Login() {
                             </label>
                             <div className="w-full rounded-lg h-[40px] items-center flex justify-center bg-gradient-to-br from-pink1 to-purple1">
                                 <input
-                                    id="key"
-                                    name="key"
+                                    id="password"
+                                    name="password"
+                                    type="password"
                                     className="rounded-lg  w-full h-[34px] m-0.5 text-black1 px-2 text-sm"
                                     onChange={handleLoginChange}
                                 ></input>
@@ -125,11 +117,11 @@ export default function Login() {
                             <i className="text-sm text-red1">{passwordError}</i>
                         </div>
                         <div>
-                            <form className="my-2 bg-gradient-to-br text-center from-pink1 to-purple1 border-2 border- text-white1 text-md rounded-lg block w-96 mt-12 py-2  hover:text-white drop-shadow-lg hover:drop-shadow-md hover:"
-                            onSubmit ={handleSubmit} 
+                            <button className="my-2 bg-gradient-to-br text-center from-pink1 to-purple1 border-2 border- text-white1 text-md rounded-lg block w-96 mt-12 py-2  hover:text-white drop-shadow-lg hover:drop-shadow-md hover:"
+                            onClick ={() => handleSubmit()} 
                             >
                                 Log In
-                            </form>
+                            </button>
                         </div>
                         <div>
                             <button onClick={() => (window.location.href = "/signup")} className="my-2 text-white1 text-md rounded-lg block w-96  hover:text-white drop-shadow-lg hover:drop-shadow-md hover:" >

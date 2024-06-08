@@ -1,7 +1,7 @@
 'use client';
 import { ChangeEvent, useLayoutEffect, useState } from "react";
 import axios from "axios";
-import { getCookie, setCookie } from 'typescript-cookie'
+import Cookies from 'universal-cookie'
 // import Loader from "./Loader";
 import Navbar from "../components/Navbar";
 
@@ -23,13 +23,13 @@ export default function SignUp() {
     const [passwordError, setPasswordError] = useState("");
 
     useLayoutEffect(() => {
-        // const cookies = new Cookies();
-        // const token = cookies.get("token");
-        // if (token) {
-        //     window.location.href = "/dashboard";
-        // } else {
-        //     setLoading(false);
-        // }
+        const cookies = new Cookies();
+        const token = cookies.get("token");
+        if (token) {
+            window.location.href = "/dashboard";
+        } else {
+            setLoading(false);
+        }
     }, []);
 
 

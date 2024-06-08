@@ -5,8 +5,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {convertTZ} from "../../../../utils/formatDate";
 import prisma from "../../prisma";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { user } = req as any; // We use "as any" because the custom property is not in the type definition
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {  const { user } = req as any; // We use "as any" because the custom property is not in the type definition
 
   const { id } = req.query;
 

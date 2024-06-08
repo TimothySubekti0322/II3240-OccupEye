@@ -12,7 +12,7 @@ const Navbar: React.FC<NavProps> = ({ currPage }) => {
 
     const Cookie = new Cookies();
     const payload = Cookie.get("payload");
-    if (payload) {
+    if (!payload) {
       window.location.href = "/";
     } else {
       const token: string = Cookie.get("token");
