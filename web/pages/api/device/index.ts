@@ -2,17 +2,23 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../prisma";
-import authMiddleware from "../../../utils/authMiddleware";
+// import authMiddleware from "../../../utils/authMiddleware";
 import { v4 as uuidv4 } from "uuid";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
 
+  // Extract and validate the authorization header
+  const authToken = req.headers.authorization;
+
   switch (method) {
     case "GET":
       return getDevices(req, res);
     case "POST":
-      return authMiddleware(createDevice)(req, res);
+      if (!authToken ) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      return createDevice(req, res);
     default:
       res.setHeader("Allow", ["GET", "POST"]);
       res.status(405).end(`Method ${method} Not Allowed`);

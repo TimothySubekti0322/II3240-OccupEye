@@ -29,8 +29,18 @@ export interface Data {
     id: string;
     name: string;
     email: string;
-    data: Data[];
     currentVisitors: number;
     enteredToday: number;
     enteredThisHour: number;
+    chartData: { value: number; label: string }[];
+  }
+
+  export interface TableData {
+    id: string;
+    deviceId: string;
+    date: string;
+    hour: number;
+    visitors: number;
+    entered: number;
+    exited: number;
   }

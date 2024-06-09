@@ -23,11 +23,16 @@ const hourFormatter = (hour: number): string => {
   return `${hour}:00`;
 };
 
-const convertTZ = (p0: Date, p1: string): Date => {
+const convertTZ1 = (): Date => {
   const date = new Date();
   const local = toZonedTime(date, "Asia/Jakarta");
   console.log(local);
   return local;
 };
+const convertTZ2 = (p0: Date): Date => {
+  const local = toZonedTime(p0, "Asia/Jakarta");
+  console.log(local);
+  return local;
+};
 
-export { getNumberOfDaysInMonthFromString, hourFormatter, convertTZ };
+export { getNumberOfDaysInMonthFromString, hourFormatter, convertTZ1, convertTZ2 };

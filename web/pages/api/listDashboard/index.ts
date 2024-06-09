@@ -9,7 +9,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 )  {
+  console.log("masuk");
   const { user } = req as any; // We use "as any" because the custom property is not in the type definition
+  console.log("user: ", user);
 
   if (!user.email) {
     return res.status(200).json({ message: "Unauthorized", status: 401 });
