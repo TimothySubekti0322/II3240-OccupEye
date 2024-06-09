@@ -18,7 +18,7 @@ import { convertTZ } from "../../utils/dateFormatter";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const Dashboard = (id: number) => {
+const Dashboard = (id: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [tableData, setTableData] = useState<TableData[]>([]);
   const [dashboard, setDashboard] = useState<DashboardData>({
@@ -37,15 +37,17 @@ const Dashboard = (id: number) => {
   const [selectedDate, setSelectedDate] = useState<Date>(convertTZ());
 
   useEffect(() => {
+    const deviceId = id.params.id;
     const fetchData = async (token: string) => {
       try {
         setLoading(true);
-        const res = await axios.get(`/api/dashboard/${id}`, {
+
+        const res = await axios.get(`/api/dashboard/${deviceId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        const res2 = await axios.get(`/api/table/${id}`, {
+        const res2 = await axios.get(`/api/table/${deviceId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -54,7 +56,9 @@ const Dashboard = (id: number) => {
           window.location.href = "/";
         } else {
           setDashboard(res.data.data);
+          console.log(res);
           setTableData(res2.data.data);
+          console.log(res2);
           setLoading(false);
         }
       } catch (err) {
