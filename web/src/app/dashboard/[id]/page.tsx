@@ -18,7 +18,7 @@ import { convertTZ } from "../../utils/dateFormatter";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const Dashboard = (id: string) => {
+const Dashboard = (id: { params: { id: any; }; }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [tableData, setTableData] = useState<TableData[]>([]);
   const [dashboard, setDashboard] = useState<DashboardData>({
@@ -37,6 +37,7 @@ const Dashboard = (id: string) => {
   const [selectedDate, setSelectedDate] = useState<Date>(convertTZ());
 
   useEffect(() => {
+    console.log(id);
     const deviceId = id.params.id;
     const fetchData = async (token: string) => {
       try {
