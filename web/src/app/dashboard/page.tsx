@@ -27,75 +27,74 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    //   const fetchData = async (token: string) => {
+    const fetchData = async (token: string) => {
+      try {
+        setLoading(true);
+        const res = await axios.get("/api/listDashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    //     // try {
-    //     setLoading(true);
-    //     const res = await axios.get('/api/listDashboard', {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     });
-    //     console.log(res);
-    //     if (res.status === 401) {
-    //       // window.location.href = "/";
-    //     } else {
-    //       setDashboards(res.data);
-    //       setLoading(false);
-    //     }
-    //     // } catch (err) {
-    //     //   console.log(err);
-    //     // }
-    //   };
+        if (res.status === 401) {
+          window.location.href = "/";
+        } else {
+          setDashboards(res.data.data);
+          console.log(res.data.data);
+          setLoading(false);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-    const data: Device[] = [
-      {
-        id: "1",
-        name: "Device 1",
-        email: "example@example.com",
-        currentVisitors: 0,
-        enteredToday: 0,
-        enteredThisHour: 0,
-        chartData: [
-          { value: 65, label: "1" },
-          { value: 59, label: "2" },
-          { value: 80, label: "3" },
-          { value: 81, label: "4" },
-          { value: 56, label: "5" },
-          { value: 55, label: "6" },
-          { value: 40, label: "7" },
-          { value: 80, label: "8" },
-          { value: 81, label: "9" },
-          { value: 56, label: "10" },
-          { value: 55, label: "11" },
-          { value: 40, label: "12" },
-          { value: 65, label: "13" },
-          { value: 59, label: "14" },
-          { value: 80, label: "15" },
-          { value: 81, label: "16" },
-          { value: 56, label: "17" },
-          { value: 55, label: "18" },
-          { value: 40, label: "19" },
-          { value: 80, label: "20" },
-          { value: 81, label: "21" },
-          { value: 56, label: "22" },
-          { value: 55, label: "23" },
-          { value: 40, label: "24" },
-        ],
-      },
-      // Add more devices as needed
-    ];
+    // const data: Device[] = [
+    //   {
+    //     id: "1",
+    //     name: "Device 1",
+    //     email: "example@example.com",
+    //     currentVisitors: 0,
+    //     enteredToday: 0,
+    //     enteredThisHour: 0,
+    //     chartData: [
+    //       { value: 65, label: "1" },
+    //       { value: 59, label: "2" },
+    //       { value: 80, label: "3" },
+    //       { value: 81, label: "4" },
+    //       { value: 56, label: "5" },
+    //       { value: 55, label: "6" },
+    //       { value: 40, label: "7" },
+    //       { value: 80, label: "8" },
+    //       { value: 81, label: "9" },
+    //       { value: 56, label: "10" },
+    //       { value: 55, label: "11" },
+    //       { value: 40, label: "12" },
+    //       { value: 65, label: "13" },
+    //       { value: 59, label: "14" },
+    //       { value: 80, label: "15" },
+    //       { value: 81, label: "16" },
+    //       { value: 56, label: "17" },
+    //       { value: 55, label: "18" },
+    //       { value: 40, label: "19" },
+    //       { value: 80, label: "20" },
+    //       { value: 81, label: "21" },
+    //       { value: 56, label: "22" },
+    //       { value: 55, label: "23" },
+    //       { value: 40, label: "24" },
+    //     ],
+    //   },
+    // Add more devices as needed
+    // ];
 
-    setDashboards(data);
-    console.log(dashboards);
+    // setDashboards(data);
 
     const Cookie = new Cookies();
     const payload = Cookie.get("payload");
     if (!payload) {
-      // window.location.href = "/";
+      window.location.href = "/";
     } else {
       const token: string = Cookie.get("token");
-      // fetchData(token);
+      fetchData(token);
     }
   }, []);
 
@@ -162,8 +161,8 @@ const Dashboard = () => {
     <>
       <Navbar currPage="dashboard" />
       <div className="w-full min-h-screen items-center justify-between font- text-sm p-24 bg-gradient-to-b from-black1 to-blue1">
-        <div className="justify-center content-center text-white1 align-middle">
-          <div className="flex justify-center">
+        <div className="text-white1 align-middle">
+          <div className=" flex flex-col items-center justify-center">
             {dashboards.map((item, idx) => (
               <button
                 onClick={() => {
@@ -171,7 +170,7 @@ const Dashboard = () => {
                 }}
                 key={idx}
               >
-                <div className="mx-auto font-bold text-xl content-center text-center my-2 bg-gradient-to-br text-center from-purple1 to-yellow1 border-2 text-white1 w-96 text-md rounded-lg block px-8 mt-12 py-2">
+                <div className="mx-auto font-bold text-xl content-center my-2 bg-gradient-to-br text-center from-purple1 to-yellow1 border-2 text-white1 text-md rounded-lg block px-8 mt-12 py-2 justify-self-center w-fit mb-10">
                   Dashboard {item.name}
                 </div>
                 <div className="text-lg border-2 border-white1 rounded-lg gap-x-8 px-12">
@@ -202,13 +201,11 @@ const Dashboard = () => {
                         <Bar
                           className="bg-transparent"
                           data={{
-                            labels: item.chartData.map((entry) => entry.label),
+                            labels: item.data.map((entry) => entry.label),
                             datasets: [
                               {
                                 label: "",
-                                data: item.chartData.map(
-                                  (entry) => entry.value
-                                ),
+                                data: item.data.map((entry) => entry.value),
                                 backgroundColor: "white",
                                 // backgroundColor: 'white',
                                 // borderWidth: 1,
