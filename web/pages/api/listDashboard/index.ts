@@ -1,17 +1,12 @@
 // pages/api/getDevices.ts
 
 import type { NextApiRequest, NextApiResponse } from "next";
-// import authMiddleware from "../../../utils/authMiddleware";
-import {convertTZ } from "../../../utils/formatDate";
+import authMiddleware from "../../../utils/authMiddleware";
+import convertTZ, { isDateLessThan } from "../../../utils/formatDate";
 import prisma from "../prisma";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-)  {
-  console.log("masuk");
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { user } = req as any; // We use "as any" because the custom property is not in the type definition
-  console.log("user: ", user);
 
   if (!user.email) {
     return res.status(200).json({ message: "Unauthorized", status: 401 });
@@ -47,7 +42,7 @@ export default async function handler(
     const devicesWithStats = await Promise.all(
       devices.map(async (device) => {
         const currentVisitors = device.data.reduce((sum, entry) => {
-          if ((entry.date < currentDate)) {
+          if (isDateLessThan(entry.date, currentDate)) {
             return sum + entry.entered - entry.exited;
           }
           return sum;
@@ -118,3 +113,5 @@ export default async function handler(
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export default authMiddleware(handler);

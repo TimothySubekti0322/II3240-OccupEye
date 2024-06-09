@@ -3,6 +3,7 @@
 OccupEye is a comprehensive technology solution designed to enhance store operations and business analysis through the integration of IoT devices, web and mobile applications, and API services. By accurately counting and reporting the number of visitors to a store in real-time, OccupEye provides valuable insights that can help business owners make informed decisions and optimize their strategies. The system leverages data analytics to transform raw visitor data into actionable information, enabling businesses to improve customer experiences and drive sales.
 
 ## OccupEye Team
+
 18221059 - Nadira Rahmananda Arifandi
 18221063 - Timothy Subekti
 18221081 - Nadine Aliya Putri
@@ -23,40 +24,48 @@ OccupEye is a comprehensive technology solution designed to enhance store operat
 ## Features
 
 ### Real-Time Visitor Counting
+
 - IoT Devices: Utilizes advanced IoT sensors to count the number of visitors entering and exiting the store.
 - Accuracy: Ensures high accuracy in visitor counting to provide reliable data for analysis.
 
 ### Data Analytics
+
 - Insights Generation: Analyzes visitor data to generate insights on customer behavior, peak hours, and store performance.
 - Business Strategies: Helps business owners draw appropriate strategies based on real-time data and historical trends.
 
 ### Web Application
+
 - Dashboard: Provides a user-friendly dashboard for business owners to monitor visitor data in real-time.
 - Reports: Generates detailed reports on visitor statistics, allowing for easy tracking and analysis.
 
 ### Mobile Application
+
 - On-the-Go Access: Enables business owners to access visitor data and insights from their mobile devices.
 - Notifications: Sends real-time notifications and alerts based on visitor patterns and thresholds.
 
 ### API Service
+
 - Integration: Offers API services for seamless integration with other business systems and applications.
 - Customization: Allows businesses to customize data retrieval and reporting based on their specific needs.
 
 ## Technologies Used
 
 ### Mobile App
+
 - **Framework :** React Native (Expo)
 - **UI Library :** React Native Paper
 - **CSS framework :** Nativewind
 - **Language :** Typescript
 
 ### API Service
+
 - **Framework :** Express.js
 - **open source server environment :** Node.js
 - **ORM :** Prisma
 - **Language :** Javascript
 
 ### Database
+
 - **Cloud Database :** Supabase
 
 ## Getting Started
@@ -123,8 +132,8 @@ DATABASE_URL=YOUR_DATABASE_URL_HERE
   ```bash
   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
   ```
-  
- - **DATABASE_URL :** if you are using Supabase, you could go to supabase project > project settings > Database. Then Copy your connection String. Your connection String should look like this "postgres://postgres.pqxlskdoexqassdiiqa:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:5433/postgres". Replace [YOUR-PASSWORD] with your database password then copy-paste to .env file
+
+- **DATABASE_URL :** if you are using Supabase, you could go to supabase project > project settings > Database. Then Copy your connection String. Your connection String should look like this "postgres://postgres.pqxlskdoexqassdiiqa:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:5433/postgres". Replace [YOUR-PASSWORD] with your database password then copy-paste to .env file
 
 Once all configurations are in place, start the backend server by running:
 

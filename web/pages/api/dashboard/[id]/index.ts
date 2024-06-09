@@ -1,14 +1,12 @@
 // pages/api/dashboard/[id]
 
 import type { NextApiRequest, NextApiResponse } from "next";
-// import authMiddleware from "../../../../utils/authMiddleware";
-import {convertTZ} from "../../../../utils/formatDate";
+import authMiddleware from "../../../../utils/authMiddleware";
+import convertTZ, { isDateLessThan } from "../../../../utils/formatDate";
 import prisma from "../../prisma";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {  const { user } = req as any; // We use "as any" because the custom property is not in the type definition
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { user } = req as any; // We use "as any" because the custom property is not in the type definition
 
   const { id } = req.query;
 
@@ -46,7 +44,7 @@ export default async function handler(
     const currentHour = currentDate.getHours();
 
     const currentVisitors = device.data.reduce((sum, entry) => {
-      if ((entry.date < currentDate)) {
+      if (isDateLessThan(entry.date, currentDate)) {
         return sum + entry.entered - entry.exited;
       }
       return sum;
@@ -215,3 +213,5 @@ export default async function handler(
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export default authMiddleware(handler);
